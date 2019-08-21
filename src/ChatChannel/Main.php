@@ -70,15 +70,15 @@ class Main extends PluginBase implements Listener{
 		return "チャンネル名:".$ch. "に参加しました";
 	}
 	public function LeaveChannel($name){
-		if($this->Players->data[$name][0] !== null){
+		if($this->Players->data[$name][0] === null){
 			return "チャンネルに参加していません";
 		}
 		$this->Players->data[$name] = [null, [true]];
 		return "チャンネルへの参加を停止しました";
 	}
 	public function GlobalSettings($name, $d){
-		if($this->Players->data[$name][0] !== null){
-			return "チャンネルに参加しているためグローバルチャットの設定変更はできません";
+		if($this->Players->data[$name][0] === null){
+			return "チャンネルに参加していないためグローバルチャットの設定変更はできません";
 		}
 		if($d){
 			$this->Players->data[$name][1][0] = true;
@@ -89,11 +89,11 @@ class Main extends PluginBase implements Listener{
 		}
 	}
 	public function onChat(PlayerChatEvent $event){
-		$event->getMessage();
-		$name = $event->getPlayer->getName();
+		$name = $event->getPlayer()->getName();
 		$rs = $event->getRecipients();
 		if($this->Players->data[$name][0] !== null){
 			foreach ($rs as $key => $pl) {
+				if(!($pl instanceof Player)) continue;
 				$nm = $pl->getName();
 				if($this->Players->data[$nm][0] !== $this->Players->data[$name][0]){
 					unset($rs[$key]);
@@ -102,6 +102,7 @@ class Main extends PluginBase implements Listener{
 			$event->setRecipients(array_values($rs));
 		}else{
 			foreach ($rs as $key => $pl) {
+				if(!($pl instanceof Player)) continue;
 				$nm = $pl->getName();
 				if(!$this->Players->data[$nm][1][0]){
 					unset($rs[$key]);

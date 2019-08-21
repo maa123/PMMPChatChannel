@@ -18,7 +18,7 @@ class CCCommand extends Command {
 		if($args[0] === 'list'){
 			$list = $this->_this->GetChannels();
 			foreach ($list as $ch) {
-				$sender->sendMessage("[CC] ".$ch[0]);
+				$sender->sendMessage("[CC] ".$ch);
 			}
 			return true;
 		}else if($args[0] === 'join'){
@@ -26,11 +26,11 @@ class CCCommand extends Command {
 				$sender->sendMessage("[CC] チャンネル名が指定されていません");
 				return false;
 			}
-			$res = $this->_this->JoinChannel($sender->getPlayer(), $args[1]);
+			$res = $this->_this->JoinChannel($sender->getPlayer()->getName(), $args[1]);
 			$sender->sendMessage("[CC] ".$res);
 			return true;
 		}else if($args[0] === 'leave'){
-			$res = $this->_this->LeaveChannel($sender->getPlayer());
+			$res = $this->_this->LeaveChannel($sender->getPlayer()->getName());
 			$sender->sendMessage("[CC] ".$res);
 			return true;
 		}else if($args[0] === 'gset'){
@@ -51,7 +51,7 @@ class CCCommand extends Command {
 					$flag = true;
 					break;
 			}
-			$res = $this->_this->GlobalSettings($sender->getPlayer(), $flag);
+			$res = $this->_this->GlobalSettings($sender->getPlayer()->getName(), $flag);
 			$sender->sendMessage("[CC] ".$res);
 			return true;
 		}else if($args[0] === 'op'){
